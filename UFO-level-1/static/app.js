@@ -2,35 +2,38 @@
 
 var tableData = data;
 var button = d3.select("#filter-btn");
+var form = d3.select("form")
 var inputField = d3.select("#datetime");
 var tbody = d3.select("tbody");
 
-tableData.forEach(function(ufoData) {
+var insertData = tableData.forEach(function(ufoDataElement) {
     
     var row = tbody.append("tr");
-    Object.entries(ufoData).forEach(function([key, value]) {
-        var cell = row.append("td");
-        cell.text(value);
+    Object.entries(ufoDataElement).forEach(function([key, value]) {
+        row.append("td").text(value);
     });
- 
 });
 
-function handleClick() {
+function handleEvent() {
 
     d3.event.preventDefault();
 
     var inputValue = inputField.property("value");
 
-    console.log("A button was clicked!");
-    console.log(inputValue);
-  
-    // We can use d3 to see the object that dispatched the event
-    console.log(d3.event.target);
+    console.log(inputValue)
 
-    var filteredData = tableData.filter(ufoData => ufoData.datetime === inputValue);
-    console.log(filteredData);
+    var filteredData = tableData.filter(sighting => sighting.datetime === inputValue);
+    console.log(filteredData)
 
-  };
-  
-  // We can use the `on` function in d3 to attach an event to the handler function
-button.on("click", handleClick);
+    tbody.html("");
+
+    filteredData.forEach(function(sighting) {
+        var row = tbody.append("tr");
+        Object.entries(sighting).forEach(function([key, value]) {
+            row.append("td").text(value);
+        });
+    });
+};
+
+button.on("click", handleEvent);
+form.on("submit", handleEvent);
